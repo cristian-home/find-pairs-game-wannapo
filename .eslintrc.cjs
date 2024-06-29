@@ -15,6 +15,9 @@ module.exports = {
       extends: ['plugin:playwright/recommended']
     }
   ],
+  rules: {
+    'vue/multi-word-component-names': 'off'
+  },
   parserOptions: {
     ecmaVersion: 'latest'
   }
