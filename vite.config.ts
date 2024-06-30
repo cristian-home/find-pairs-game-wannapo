@@ -8,7 +8,7 @@ import { compression } from 'vite-plugin-compression2'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // base: '/wannapo-game/',
+  base: '/wannapo-game/',
   plugins: [
     Icons({ compiler: 'vue3' }),
     vue(),

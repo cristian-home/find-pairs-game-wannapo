@@ -60,7 +60,7 @@ onMounted(() => {
       <img src="@/assets/img/congrats.webp" class="max-h-96 mx-3" alt="" />
       <div class="-mt-20">
         <p class="text-center text-endeavour">Lograste armar</p>
-        <p class="text-center text-mauvelous text-5xl">0 Parejas</p>
+        <p class="text-center text-mauvelous text-5xl">{{ gameStore.getPairsFound }} parejas</p>
       </div>
 
       <Button type="button" @click="newGame">Aceptar</Button>

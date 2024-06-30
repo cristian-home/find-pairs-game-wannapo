@@ -16,7 +16,12 @@ const stars = generateUniformPositions(10, {
 
 const gameStore = useGameStore()
 
-const clouds = generateUniformPositions(5, { minGridSize: 5, maxGridSize: 10 })
+const clouds = generateUniformPositions(5, {
+  minGridSize: 3,
+  maxGridSize: 10,
+  minOpacity: 0.2,
+  maxOpacity: 1
+})
 
 const starsRefs = ref<HTMLDivElement[]>([])
 
@@ -93,8 +98,11 @@ onMounted(() => {
 <template>
   <div class="h-dvh w-full overflow-x-hidden overflow-y-hidden">
     <div class="fixed w-full h-full -z-10">
+      <!-- <pre>{{ { tilesRevealed: gameStore.getTilesRevealed.length } }}</pre>
+      <pre>{{ { pairsFound: gameStore.getPairsFound } }}</pre>
+      <pre>{{ { attempts: gameStore.getAttempts } }}</pre>
       <pre>{{ gameStore.currentGameStats }}</pre>
-      <pre>{{ gameStore.gameStats }}</pre>
+      <pre>{{ gameStore.gameStats }}</pre> -->
       <div
         class="-z-10"
         v-for="(cloud, i) in clouds"

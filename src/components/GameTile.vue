@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import QLogo from '@/components/icons/QLogo.vue'
+import type { Tile } from '@/lib/utils/game-data'
+import { useMotion } from '@vueuse/motion'
 import { ref, watch } from 'vue'
 
 const props = defineProps<{
-  tile: {
-    id: number
-    variant: 'default' | 'alt'
-    isRevealed: boolean
-    isMatched: boolean
-    image: string
-  }
+  tile: Tile
 }>()
 
 const tileRef = ref<HTMLDivElement | null>(null)
@@ -17,26 +13,68 @@ const image = ref<HTMLImageElement | null>(null)
 const qLogoRef = ref<SVGElement | null>(null)
 
 watch(
-  () => props.tile.isRevealed,
+  () => props.tile.isMatched,
   (value: boolean) => {
-    console.log(value)
+    if (value) {
+      // animate bounce from scale 1 to 1.5 to 1
+      const { variant } = useMotion(tileRef, {
+        initial: {
+          scale: 1
+        },
+        enter: {
+          scale: 1.2,
+          transition: {
+            type: 'spring',
+            stiffness: 350,
+            damping: 20,
+            onComplete: () => {
+              variant.value = 'default'
+            }
+          }
+        },
+        default: {
+          scale: 1,
+          transition: {
+            type: 'spring',
+            stiffness: 350,
+            damping: 20
+          }
+        }
+      })
+    }
   }
 )
 </script>
 
 <template>
   <div
-    class="w-20 h-20 text-seagull-50 rounded-md outline outline-8 outline-seagull-50 shadow-xl shadow-endeavour-500"
+    class="cursor-pointer w-20 h-20 even:bg-endeavour odd:bg-seagull text-seagull-50 rounded-md outline outline-8 outline-seagull-50 shadow-xl shadow-endeavour-500"
     :class="{
-      'bg-seagull': props.tile.variant === 'alt',
-      'bg-endeavour': props.tile.variant === 'default',
       'outline-red-700': props.tile.isRevealed
     }"
     ref="tileRef"
   >
-    <QLogo v-if="!props.tile.isRevealed" class="m-6 fill-seagull-50" ref="qLogoRef" />
-    <img v-else :src="props.tile.image" class="w-full h-full" ref="image" />
+    <QLogo
+      v-if="!props.tile.isRevealed"
+      class="m-6 fill-seagull-50"
+      ref="qLogoRef"
+      v-motion
+      :initial="{ opacity: 0 }"
+      :enter="{ opacity: 1 }"
+      :leave="{ opacity: 0 }"
+    />
+    <img
+      v-else
+      :src="props.tile.image"
+      class="w-full h-full"
+      ref="image"
+      v-motion
+      :initial="{ opacity: 0 }"
+      :enter="{ opacity: 1 }"
+      :leave="{ opacity: 0 }"
+    />
   </div>
+
   <!-- <div class="flip-card w-20 h-20 bg-transparent" ref="tileRef">
     <div class="flip-card-inner w-full h-full rounded-md">
       <div class="flip-card-front rounded-md overflow-hidden" ref="qLogoRef">
