@@ -15,6 +15,9 @@ export default {
         'spin-slow': 'spin 40s linear infinite',
         'spin-slow-reverse': 'spin 40s linear infinite reverse'
       },
+      screens: {
+        xs: '480px'
+      },
       colors: {
         seagull: {
           DEFAULT: '#72BDE9',
