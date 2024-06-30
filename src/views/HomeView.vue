@@ -161,7 +161,7 @@ onMounted(() => {
       class="w-full h-dvh overflow-x-hidden overflow-y-hidden grid grid-cols-1 grid-rows-[auto_1fr_auto] justify-items-center align-items-center gap-4 p-4"
     >
       <div class="col-start-1 col-end-1 row-start-1 row-end-1">
-        <img src="@/assets/img/winny-logo.webp" class="max-h-28" ref="winnyLogo" />
+        <img src="@/assets/img/winny-logo_600x600.webp" class="max-h-28" ref="winnyLogo" />
       </div>
       <div
         ref="start"
@@ -169,7 +169,7 @@ onMounted(() => {
         class="self-start col-start-1 col-end-1 row-start-2 row-end-2 flex flex-col justify-center items-center gap-6"
       >
         <div class="row-start-1 row-end-1">
-          <img src="@/assets/img/start.webp" class="max-h-80" />
+          <img src="@/assets/img/start_600x600.webp" class="max-h-80" />
         </div>
         <div class="col-start-1 col-end-1 row-start-2 row-end-2" ref="buttonStart">
           <RouterLink to="/game" custom v-slot="{ navigate }">

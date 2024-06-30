@@ -149,7 +149,7 @@ onMounted(() => {
     class="h-dvh w-full overflow-x-hidden overflow-y-hidden grid grid-cols-1 grid-rows-[auto_1fr_auto] justify-items-center place-items-center gap-2"
     ref="headerRef"
   >
-    <div class="h-28 w-full flex flex-row justify-between gap-8 p-0">
+    <div class="h-20 w-full flex flex-row justify-between gap-8 p-0">
       <div class="w-1/4 flex flex-row justify-start items-center">
         <QLogo class="fill-endeavour max-h-full max-w-full w-20 h-20" />
       </div>
@@ -161,7 +161,7 @@ onMounted(() => {
         />
       </div>
       <div class="w-1/4 flex flex-row justify-end items-center">
-        <img src="@/assets/img/winny-logo.webp" class="max-h-full max-w-full" />
+        <img src="@/assets/img/winny-logo_600x600.webp" class="max-h-full max-w-full" />
       </div>
     </div>
     <div
@@ -185,7 +185,7 @@ onMounted(() => {
         </Badge>
       </div>
       <div class="w-1/3 flex flex-row justify-end items-center self-end">
-        <img src="@/assets/img/bottom-bear.webp" class="max-h-full max-w-full w-36" />
+        <img src="@/assets/img/bottom-bear_300x300.webp" class="max-h-full max-w-full w-36" />
       </div>
     </div>
   </div>

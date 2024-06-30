@@ -56,10 +56,10 @@ onMounted(() => {
   >
     <QLogo class="absolute top-2 left-2 w-16 h-16 fill-endeavour" ref="qLogoRef" />
     <div class="" ref="logoRef">
-      <img src="@/assets/img/winny-logo.webp" class="max-h-24 mx-3" />
+      <img src="@/assets/img/winny-logo_600x600.webp" class="max-h-24 mx-3" />
     </div>
     <div class="flex flex-col gap-4 justify-center items-center" ref="congratsRef">
-      <img src="@/assets/img/congrats.webp" class="max-h-96 mx-3" alt="" />
+      <img src="@/assets/img/congrats_600x600.webp" class="max-h-96 mx-3" alt="" />
       <div class="-mt-20">
         <p class="text-center text-endeavour">Lograste armar</p>
         <p class="text-center text-mauvelous text-5xl">{{ gameStore.getPairsFound }} parejas</p>
