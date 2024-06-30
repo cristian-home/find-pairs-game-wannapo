@@ -5,7 +5,6 @@ import SolarStarBold from '~icons/solar/star-bold'
 import { onMounted, ref } from 'vue'
 import { generateUniformPositions } from '@/lib/utils/positions'
 import { useMotion } from '@vueuse/motion'
-import { useGameStore } from './stores/game'
 
 const stars = generateUniformPositions(10, {
   minGridSize: 10,
@@ -13,8 +12,6 @@ const stars = generateUniformPositions(10, {
   minSize: 2,
   maxSize: 5
 })
-
-const gameStore = useGameStore()
 
 const clouds = generateUniformPositions(5, {
   minGridSize: 3,
@@ -98,11 +95,6 @@ onMounted(() => {
 <template>
   <div class="h-dvh w-full overflow-x-hidden overflow-y-hidden">
     <div class="fixed w-full h-full -z-10">
-      <!-- <pre>{{ { tilesRevealed: gameStore.getTilesRevealed.length } }}</pre>
-      <pre>{{ { pairsFound: gameStore.getPairsFound } }}</pre>
-      <pre>{{ { attempts: gameStore.getAttempts } }}</pre>
-      <pre>{{ gameStore.currentGameStats }}</pre>
-      <pre>{{ gameStore.gameStats }}</pre> -->
       <div
         class="-z-10"
         v-for="(cloud, i) in clouds"

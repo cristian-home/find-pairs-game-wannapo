@@ -1,11 +1,13 @@
-import { type Tile } from '@/lib/utils/game-data'
+import { type RawTile, type Tile } from '@/lib/utils/game-data'
+import { v4 as uuidv4 } from 'uuid'
 
-export const pickAndShuffleGameTiles = (tiles: Tile[], numberOfPairs: number = 12) => {
-  const tilesCloned = [...tiles]
-  const uniqueTilesWithUniqueMatchValue = pickRandomUniquItems(tilesCloned, numberOfPairs)
+export const pickAndShuffleGameTiles = (tiles: RawTile[], numberOfPairs: number = 12): Tile[] => {
+  const tilesForUnique = structuredClone(tiles).map((tile) => ({ ...tile, id: uuidv4() })) as Tile[]
+  const tilesForPick = structuredClone(tilesForUnique)
+  const uniqueTilesWithUniqueMatchValue = pickRandomUniquItems(tilesForUnique, numberOfPairs)
   const matchesValues = uniqueTilesWithUniqueMatchValue.map((tile) => tile.matchValue)
 
-  const tilesPairs = tiles.filter((tile) => {
+  const tilesPairs = tilesForPick.filter((tile) => {
     return matchesValues.includes(tile.matchValue)
   })
 
@@ -19,7 +21,7 @@ export const pickRandomUniquItems = (
   picked: Tile[] = [],
   maxIterations: number = 1000
 ): Tile[] => {
-  console.log('Iteration: ', maxIterations)
+  // console.log('Iteration: ', maxIterations)
 
   if (maxIterations && maxIterations <= 0) {
     return picked

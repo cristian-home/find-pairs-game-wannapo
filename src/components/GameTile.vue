@@ -3,10 +3,13 @@ import QLogo from '@/components/icons/QLogo.vue'
 import type { Tile } from '@/lib/utils/game-data'
 import { useMotion } from '@vueuse/motion'
 import { ref, watch } from 'vue'
+import { useGameStore } from '@/stores/game'
 
 const props = defineProps<{
   tile: Tile
 }>()
+
+const gameStore = useGameStore()
 
 const tileRef = ref<HTMLDivElement | null>(null)
 const image = ref<HTMLImageElement | null>(null)
@@ -47,32 +50,20 @@ watch(
 </script>
 
 <template>
-  <div
-    class="cursor-pointer w-20 h-20 even:bg-endeavour odd:bg-seagull text-seagull-50 rounded-md outline outline-8 outline-seagull-50 shadow-xl shadow-endeavour-500"
-    :class="{
-      'outline-red-700': props.tile.isRevealed
-    }"
-    ref="tileRef"
-  >
-    <QLogo
-      v-if="!props.tile.isRevealed"
-      class="m-6 fill-seagull-50"
-      ref="qLogoRef"
-      v-motion
-      :initial="{ opacity: 0 }"
-      :enter="{ opacity: 1 }"
-      :leave="{ opacity: 0 }"
-    />
-    <img
-      v-else
-      :src="props.tile.image"
-      class="w-full h-full"
-      ref="image"
-      v-motion
-      :initial="{ opacity: 0 }"
-      :enter="{ opacity: 1 }"
-      :leave="{ opacity: 0 }"
-    />
+  <div class="group" ref="tileRef">
+    <button
+      class="active:!scale-90 duration-75 !transition-transform cursor-pointer w-20 h-20 group-even:bg-endeavour-600 group-odd:bg-seagull text-seagull-50 rounded-md overflow-hidden outline outline-8 outline-seagull-50 shadow-[0px_5px_10px_8px_rgba(0,_51,_101,_0.75)]"
+      :class="{
+        'outline-seagull-600': !props.tile.isMatched && props.tile.isRevealed,
+        '!outline-red-400':
+          !props.tile.isMatched && props.tile.isRevealed && gameStore.getTilesRevealedCount > 1
+      }"
+    >
+      <Transition name="fade" mode="out-in">
+        <QLogo v-if="!props.tile.isRevealed" class="m-6 fill-seagull-50" ref="qLogoRef" />
+        <img v-else :src="props.tile.image" class="w-full h-full" ref="image" />
+      </Transition>
+    </button>
   </div>
 
   <!-- <div class="flip-card w-20 h-20 bg-transparent" ref="tileRef">
@@ -90,6 +81,16 @@ watch(
 </template>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 120ms linear;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .flip-card {
   background-color: transparent;
 }

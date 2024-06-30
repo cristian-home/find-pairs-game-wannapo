@@ -3,18 +3,17 @@ import PairCounter from '@/components/PairCounter.vue'
 import GameBoard from '@/components/GameBoard.vue'
 import QLogo from '@/components/icons/QLogo.vue'
 import { useMotion } from '@vueuse/motion'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Button from '@/components/controls/Button.vue'
 import Badge from '@/components/controls/Badge.vue'
 import Timer from '@/components/icons/Timer.vue'
 import { useIntervalFn } from '@vueuse/core'
 import { invoke, until, useCounter } from '@vueuse/core'
 import ModalDialog from '@/components/ModalDialog.vue'
-import { useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { useGameStore } from '@/stores/game'
 
 const gameStore = useGameStore()
-
 const router = useRouter()
 
 const headerRef = ref<HTMLElement | null>(null)
@@ -26,43 +25,37 @@ const animatedElements = [headerRef, gameBoardRef, footerRef]
 const gameOverModal = ref(false)
 const modalTitle = ref('')
 const modalText = ref('')
-// const { count: attempts } = useCounter()
+
 const { count: timeLeft, dec: decTimeLeft } = useCounter(gameStore.getTimelimit)
-// const timeLeft = ref(30)
 
 const attempts = computed(() => gameStore.getAttempts)
 
 invoke(async () => {
   await until(attempts).toBe(gameStore.getAttemptsLimit)
 
-  pause()
-
-  saveGameState()
-
-  gameOverModal.value = true
-  modalTitle.value = 'Juego Terminado'
-  modalText.value = 'Se acabaron tus intentos'
-
-  await until(gameOverModal).toBe(false)
-
-  router.push('/congrats')
+  endGame({ title: 'Juego Terminado', text: 'Se acabaron tus intentos' })
 })
 
 invoke(async () => {
   await until(timeLeft).toBe(0)
 
-  pause()
+  endGame({ title: 'Juego Terminado', text: 'Se acabo el tiempo' })
+})
 
+const endGame = async (
+  options: { title: string; text: string } = { title: 'Juego Terminado', text: 'Fue un buen juego' }
+) => {
+  pause()
   saveGameState()
 
   gameOverModal.value = true
-  modalTitle.value = 'Juego Terminado'
-  modalText.value = 'Se terminó el tiempo'
+  modalTitle.value = options.title
+  modalText.value = options.text
 
   await until(gameOverModal).toBe(false)
 
   router.push('/congrats')
-})
+}
 
 const { pause } = useIntervalFn(() => {
   decTimeLeft()
@@ -77,9 +70,45 @@ const saveGameState = () => {
   })
 }
 
+watch(
+  () => gameStore.getTilesUnmatched.length,
+  (value) => {
+    if (value === 0) {
+      endGame({ title: 'Juego Terminado', text: 'Felicitaciones has completado el juego' })
+    }
+  }
+)
+
+onBeforeRouteLeave(async () => {
+  await await Promise.all([
+    ...animatedElements.map((ref) => {
+      return new Promise((resolve) => {
+        useMotion(ref, {
+          initial: {
+            y: 0,
+            opacity: 1
+          },
+          enter: {
+            y: 100,
+            opacity: 0,
+            transition: {
+              type: 'spring',
+              stiffness: 350,
+              damping: 20,
+              onComplete: () => {
+                resolve(true)
+              }
+            }
+          }
+        })
+      })
+    })
+  ])
+})
+
 onMounted(() => {
   animatedElements.forEach((ref, index) => {
-    const { variant } = useMotion(ref, {
+    useMotion(ref, {
       initial: {
         y: 100,
         opacity: 0
@@ -112,7 +141,7 @@ onMounted(() => {
         <PairCounter
           class="scale-125 origin-top max-h-full grow"
           :pair-count="gameStore.getPairsFound"
-          :max-pairs="12"
+          :max-pairs="gameStore.getMaxPosiblePairs"
         />
       </div>
       <div class="w-1/4 flex flex-row justify-end items-center">
@@ -139,12 +168,6 @@ onMounted(() => {
           </div>
         </Badge>
       </div>
-      <!-- <div class="w-1/3 flex flex-row justify-center items-center">
-        <RouterLink to="/congrats" custom v-slot="{ navigate }">
-          <Button class="" @click="navigate">Terminar</Button>
-        </RouterLink>
-      </div> -->
-      <Button type="button" @click="() => gameStore.newGame()">New Game</Button>
       <div class="w-1/3 flex flex-row justify-end items-center self-end">
         <img src="@/assets/img/bottom-bear.webp" class="max-h-full max-w-full w-36" />
       </div>

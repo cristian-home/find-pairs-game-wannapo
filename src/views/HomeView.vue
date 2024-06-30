@@ -18,7 +18,7 @@ const fixedElements = [footerParagraphLeft, footerParagraphRight]
 const absoluteElements = [qLogoRef]
 
 const animateEnter = (ref: Ref<HTMLElement | null>, index: number = 0) => {
-  const { variant } = useMotion(ref, {
+  useMotion(ref, {
     initial: {
       y: 100,
       opacity: 0
@@ -71,7 +71,7 @@ const animateLeave = async () => {
   await Promise.all([
     ...floatingElements.reverse().map((ref, index) => {
       return new Promise((resolve) => {
-        const { variant } = useMotion(ref, {
+        useMotion(ref, {
           initial: {
             scale: 1,
             opacity: 1
@@ -94,7 +94,7 @@ const animateLeave = async () => {
 
     ...fixedElements.reverse().map((ref, index) => {
       return new Promise((resolve) => {
-        const { variant } = useMotion(ref, {
+        useMotion(ref, {
           initial: {
             y: 0,
             opacity: 1
@@ -124,7 +124,7 @@ onBeforeRouteLeave(async () => {
 
 onMounted(() => {
   absoluteElements.forEach((ref, index) => {
-    const { variant } = useMotion(ref, {
+    useMotion(ref, {
       initial: {
         opacity: 0,
         scale: 0
@@ -177,7 +177,7 @@ onMounted(() => {
         </div>
       </div>
       <div
-        class="w-full text-endeavour col-start-1 col-end-1 row-start-3 row-end-3 flex flex-row justify-between gap-4"
+        class="w-full text-endeavour col-start-1 col-end-1 row-start-3 row-end-3 flex flex-row justify-center gap-10"
       >
         <div class="max-w-64 w-1/2">
           <p class="text-lg text-center" ref="footerParagraphLeft">

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core'
 import Button from './controls/Button.vue'
 import { ref } from 'vue'
 
@@ -13,7 +12,7 @@ interface Props {
   cancelText?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isOpen: false,
   title: 'Alerta',
   message: '',
@@ -25,16 +24,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['on:modalClose'])
 const target = ref<HTMLDivElement | null>(null)
-onClickOutside(target, () => {
-  emit('on:modalClose')
-})
+
 const close = () => {
   emit('on:modalClose')
-}
-
-const confirm = () => {
-  props.onConfirm()
-  close()
 }
 </script>
 
@@ -53,7 +45,7 @@ const confirm = () => {
     <div
       ref="target"
       v-motion
-      class="flex flex-col bg-seagull-200 rounded-2xl z-40 shadow-2xl"
+      class="flex flex-col bg-seagull-200 rounded-2xl z-40 shadow-2xl max-w-lg w-full"
       :initial="{ opacity: 0, scale: 0 }"
       :enter="{
         opacity: 1,

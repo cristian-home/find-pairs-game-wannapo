@@ -11,8 +11,8 @@ interface GameStats {
 }
 
 export const useGameStore = defineStore('game', () => {
-  const timeLimit = ref(600)
-  const attemptsLimit = ref(120)
+  const timeLimit = ref(120)
+  const attemptsLimit = ref(600)
 
   const currentGameStats = ref<GameStats>({
     date: new Date(),
@@ -23,7 +23,7 @@ export const useGameStore = defineStore('game', () => {
 
   const gameStats = ref<GameStats[]>([])
 
-  const tiles = ref<Tile[]>(pickAndShuffleGameTiles([...tilesData], 6))
+  const tiles = ref<Tile[]>(pickAndShuffleGameTiles(tilesData, 6))
 
   const attempts = ref(0)
 
@@ -43,19 +43,31 @@ export const useGameStore = defineStore('game', () => {
     return tiles.value.filter((tile) => tile.isRevealed && !tile.isMatched)
   })
 
-  const tilesMatched = computed(() => {
+  const getTilesUnmatched = computed(() => {
+    return tiles.value.filter((tile) => !tile.isMatched)
+  })
+
+  const getTilesMatched = computed(() => {
     return tiles.value.filter((tile) => tile.isMatched)
   })
 
-  const getPairsFound = computed(() => {
-    return tilesMatched.value.length / 2
+  const getTilesRevealedCount = computed(() => {
+    return getTilesRevealed.value.length
   })
 
-  function setCurrentGameStats(stats: GameStats) {
+  const getMaxPosiblePairs = computed(() => {
+    return Math.floor(tiles.value.length / 2)
+  })
+
+  const getPairsFound = computed(() => {
+    return getTilesMatched.value.length / 2
+  })
+
+  const setCurrentGameStats = (stats: GameStats) => {
     currentGameStats.value = stats
   }
 
-  function newGame() {
+  const newGame = () => {
     gameStats.value.push(currentGameStats.value)
 
     currentGameStats.value = {
@@ -65,12 +77,12 @@ export const useGameStore = defineStore('game', () => {
       pairsFound: 0
     }
 
-    tiles.value = pickAndShuffleGameTiles([...tilesData], 6)
+    tiles.value = pickAndShuffleGameTiles(tilesData, 6)
 
     attempts.value = 0
   }
 
-  function setTileRevealed(tileId: number) {
+  const setTileRevealed = (tileId: string) => {
     const tile = tiles.value.find((t) => t.id === tileId)
 
     if (!tile) return
@@ -78,7 +90,7 @@ export const useGameStore = defineStore('game', () => {
     tile.isRevealed = true
   }
 
-  function flipRevealedUnmatchedTiles() {
+  const flipRevealedUnmatchedTiles = () => {
     getTilesRevealed.value.forEach((tile) => {
       if (!tile.isMatched) {
         tile.isRevealed = false
@@ -86,7 +98,7 @@ export const useGameStore = defineStore('game', () => {
     })
   }
 
-  const revealTile = (tileId: number) => {
+  const revealTile = (tileId: string) => {
     const tile = tiles.value.find((t) => t.id === tileId)
 
     if (!tile) return
@@ -112,17 +124,25 @@ export const useGameStore = defineStore('game', () => {
   }
 
   return {
-    tiles,
-    attempts,
+    timeLimit,
+    attemptsLimit,
     currentGameStats,
     gameStats,
+    tiles,
+    attempts,
     getTimelimit,
     getAttemptsLimit,
-    getTilesRevealed,
-    getPairsFound,
     getAttempts,
+    getTilesRevealed,
+    getTilesRevealedCount,
+    getTilesUnmatched,
+    getTilesMatched,
+    getMaxPosiblePairs,
+    getPairsFound,
     setCurrentGameStats,
     newGame,
+    setTileRevealed,
+    flipRevealedUnmatchedTiles,
     revealTile
   }
 })

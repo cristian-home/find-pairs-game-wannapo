@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Button from '@/components/controls/Button.vue'
 import QLogo from '@/components/icons/QLogo.vue'
-import { canionConfetti, confetti } from '@/lib/utils/confetti'
+import { canionConfetti } from '@/lib/utils/confetti'
 import { useGameStore } from '@/stores/game'
 import { useMotion } from '@vueuse/motion'
 import { onMounted, ref } from 'vue'
@@ -25,7 +25,7 @@ const newGame = () => {
 
 onMounted(() => {
   refs.forEach((ref, index) => {
-    const { variant } = useMotion(ref, {
+    useMotion(ref, {
       initial: {
         y: 100,
         opacity: 0

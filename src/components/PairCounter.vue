@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import Cloud from './icons/Cloud.vue'
-
 const props = defineProps<{ pairCount: number; maxPairs: number }>()
 </script>
 

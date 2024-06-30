@@ -261,7 +261,7 @@ export const fallingConfetti = (element: HTMLElement) => {
 export const explosionConfetti = (element: HTMLElement) => {
   tsParticles
     .load({
-      // element: element,
+      element: element,
       options: {
         fullScreen: {
           zIndex: 1
