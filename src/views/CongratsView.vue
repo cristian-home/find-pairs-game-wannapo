@@ -43,7 +43,9 @@ onMounted(() => {
     })
   })
 
-  canionConfetti(pageContent.value as HTMLDivElement)
+  if (gameStore.getPairsFound > 0) {
+    canionConfetti(pageContent.value as HTMLDivElement)
+  }
 })
 </script>
 

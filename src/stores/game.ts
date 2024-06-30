@@ -11,8 +11,10 @@ interface GameStats {
 }
 
 export const useGameStore = defineStore('game', () => {
-  const timeLimit = ref(120)
-  const attemptsLimit = ref(600)
+  const startGameCountDown = ref(10)
+  const gameStarted = ref(false)
+  const timeLimit = ref(60)
+  const attemptsLimit = ref(6)
 
   const currentGameStats = ref<GameStats>({
     date: new Date(),
@@ -67,8 +69,14 @@ export const useGameStore = defineStore('game', () => {
     currentGameStats.value = stats
   }
 
+  const startGame = () => {
+    gameStarted.value = true
+  }
+
   const newGame = () => {
     gameStats.value.push(currentGameStats.value)
+    gameStarted.value = false
+    startGameCountDown.value = 10
 
     currentGameStats.value = {
       date: new Date(),
@@ -124,6 +132,8 @@ export const useGameStore = defineStore('game', () => {
   }
 
   return {
+    startGameCountDown,
+    gameStarted,
     timeLimit,
     attemptsLimit,
     currentGameStats,
@@ -139,6 +149,7 @@ export const useGameStore = defineStore('game', () => {
     getTilesMatched,
     getMaxPosiblePairs,
     getPairsFound,
+    startGame,
     setCurrentGameStats,
     newGame,
     setTileRevealed,

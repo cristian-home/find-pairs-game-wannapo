@@ -2,7 +2,7 @@
 import QLogo from '@/components/icons/QLogo.vue'
 import type { Tile } from '@/lib/utils/game-data'
 import { useMotion } from '@vueuse/motion'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useGameStore } from '@/stores/game'
 
 const props = defineProps<{
@@ -14,6 +14,10 @@ const gameStore = useGameStore()
 const tileRef = ref<HTMLDivElement | null>(null)
 const image = ref<HTMLImageElement | null>(null)
 const qLogoRef = ref<SVGElement | null>(null)
+
+const tileRevealed = computed(() => {
+  return props.tile.isRevealed || !gameStore.gameStarted
+})
 
 watch(
   () => props.tile.isMatched,
@@ -60,7 +64,7 @@ watch(
       }"
     >
       <Transition name="fade" mode="out-in">
-        <QLogo v-if="!props.tile.isRevealed" class="m-6 fill-seagull-50" ref="qLogoRef" />
+        <QLogo v-if="!tileRevealed" class="m-6 fill-seagull-50" ref="qLogoRef" />
         <img v-else :src="props.tile.image" class="w-full h-full" ref="image" />
       </Transition>
     </button>

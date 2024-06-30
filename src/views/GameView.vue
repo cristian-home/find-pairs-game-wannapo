@@ -12,6 +12,7 @@ import { invoke, until, useCounter } from '@vueuse/core'
 import ModalDialog from '@/components/ModalDialog.vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 import { useGameStore } from '@/stores/game'
+import CountDown from '@/components/CountDown.vue'
 
 const gameStore = useGameStore()
 const router = useRouter()
@@ -26,19 +27,36 @@ const gameOverModal = ref(false)
 const modalTitle = ref('')
 const modalText = ref('')
 
+const startGameCountDown = ref(gameStore.startGameCountDown.valueOf())
+
 const { count: timeLeft, dec: decTimeLeft } = useCounter(gameStore.getTimelimit)
 
 const attempts = computed(() => gameStore.getAttempts)
 
+const { pause, resume } = useIntervalFn(() => {
+  decTimeLeft()
+}, 1000)
+
+pause()
+
+invoke(async () => {
+  await until(startGameCountDown).toBe(0)
+  gameStore.startGame()
+  resume()
+})
+
 invoke(async () => {
   await until(attempts).toBe(gameStore.getAttemptsLimit)
+  endGame({ title: 'Juego Terminado', text: 'Se acabaron tus intentos' })
+})
 
+invoke(async () => {
+  await until(attempts).toBe(gameStore.getAttemptsLimit)
   endGame({ title: 'Juego Terminado', text: 'Se acabaron tus intentos' })
 })
 
 invoke(async () => {
   await until(timeLeft).toBe(0)
-
   endGame({ title: 'Juego Terminado', text: 'Se acabo el tiempo' })
 })
 
@@ -56,10 +74,6 @@ const endGame = async (
 
   router.push('/congrats')
 }
-
-const { pause } = useIntervalFn(() => {
-  decTimeLeft()
-}, 1000)
 
 const saveGameState = () => {
   gameStore.setCurrentGameStats({
@@ -80,6 +94,8 @@ watch(
 )
 
 onBeforeRouteLeave(async () => {
+  if (attempts.value < 6 && timeLeft.value > 0) return false
+
   await await Promise.all([
     ...animatedElements.map((ref) => {
       return new Promise((resolve) => {
@@ -173,6 +189,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <CountDown v-model:seconds="startGameCountDown" v-if="!gameStore.gameStarted" />
   <ModalDialog
     :is-open="gameOverModal"
     :title="modalTitle"

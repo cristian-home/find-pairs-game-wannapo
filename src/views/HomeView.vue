@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Button from '@/components/controls/Button.vue'
 import QLogo from '@/components/icons/QLogo.vue'
+import { useGameStore } from '@/stores/game'
 import { useMotion } from '@vueuse/motion'
 import { onMounted, ref, type Ref } from 'vue'
 import { RouterLink, onBeforeRouteLeave } from 'vue-router'
@@ -181,13 +182,18 @@ onMounted(() => {
       >
         <div class="max-w-64 w-1/2">
           <p class="text-lg text-center" ref="footerParagraphLeft">
-            En <span class="text-2xl text-mauvelous">10 segundos</span> deberas memorizar las fichas
+            En
+            <span class="text-2xl text-mauvelous">{{ useGameStore().timeLimit }} segundos</span>
+            deberas memorizar las fichas
           </p>
         </div>
         <div class="max-w-64 w-1/2">
           <p class="text-lg text-center" ref="footerParagraphRight">
-            Son <span class="text-2xl text-mauvelous">4 movimientos</span> para armar la mayor
-            cantidad de parejas
+            Son
+            <span class="text-2xl text-mauvelous"
+              >{{ useGameStore().attemptsLimit }} movimientos</span
+            >
+            para armar la mayor cantidad de parejas
           </p>
         </div>
       </div>
