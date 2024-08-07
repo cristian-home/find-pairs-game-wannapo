@@ -13,6 +13,7 @@ const start = ref<HTMLDivElement | null>(null)
 const buttonStart = ref<HTMLButtonElement | null>(null)
 const footerParagraphLeft = ref<HTMLParagraphElement | null>(null)
 const footerParagraphRight = ref<HTMLParagraphElement | null>(null)
+const buttonStartRef = ref<HTMLButtonElement | null>(null)
 
 const floatingElements = [winnyLogo, start, buttonStart]
 const fixedElements = [footerParagraphLeft, footerParagraphRight]
@@ -173,7 +174,7 @@ onMounted(() => {
         </div>
         <div class="col-start-1 col-end-1 row-start-2 row-end-2" ref="buttonStart">
           <RouterLink to="/game" custom v-slot="{ navigate }">
-            <Button type="button" @click="navigate">Iniciar</Button>
+            <Button type="button" @click="navigate" ref="buttonStartRef">Iniciar</Button>
           </RouterLink>
         </div>
       </div>
@@ -183,7 +184,9 @@ onMounted(() => {
         <div class="max-w-64 w-1/2">
           <p class="text-lg text-center" ref="footerParagraphLeft">
             En
-            <span class="text-2xl text-mauvelous">{{ useGameStore().timeLimit }} segundos</span>
+            <span class="text-2xl text-mauvelous"
+              >{{ useGameStore().startGameCountDown }} segundos</span
+            >
             deberas memorizar las fichas
           </p>
         </div>

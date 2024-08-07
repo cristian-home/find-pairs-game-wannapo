@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import PairCounter from '@/components/PairCounter.vue'
+import Badge from '@/components/controls/Badge.vue'
+import Button from '@/components/controls/Button.vue'
+import CountDown from '@/components/CountDown.vue'
 import GameBoard from '@/components/GameBoard.vue'
 import QLogo from '@/components/icons/QLogo.vue'
+import Timer from '@/components/icons/Timer.vue'
+import ModalDialog from '@/components/ModalDialog.vue'
+import PairCounter from '@/components/PairCounter.vue'
+import { useGameStore } from '@/stores/game'
+import { invoke, until, useCounter, useIntervalFn } from '@vueuse/core'
 import { useMotion } from '@vueuse/motion'
 import { computed, onMounted, ref, watch } from 'vue'
-import Button from '@/components/controls/Button.vue'
-import Badge from '@/components/controls/Badge.vue'
-import Timer from '@/components/icons/Timer.vue'
-import { useIntervalFn } from '@vueuse/core'
-import { invoke, until, useCounter } from '@vueuse/core'
-import ModalDialog from '@/components/ModalDialog.vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
-import { useGameStore } from '@/stores/game'
-import CountDown from '@/components/CountDown.vue'
 
 const gameStore = useGameStore()
 const router = useRouter()
@@ -94,7 +93,7 @@ watch(
 )
 
 onBeforeRouteLeave(async () => {
-  if (attempts.value < 6 && timeLeft.value > 0) return false
+  if (attempts.value < gameStore.getAttemptsLimit && timeLeft.value > 0) return false
 
   await await Promise.all([
     ...animatedElements.map((ref) => {

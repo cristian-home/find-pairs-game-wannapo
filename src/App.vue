@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
 import Cloud from '@/components/icons/Cloud.vue'
-import SolarStarBold from '~icons/solar/star-bold'
-import { onMounted, ref } from 'vue'
 import { generateUniformPositions } from '@/lib/utils/positions'
 import { useMotion } from '@vueuse/motion'
+import { onMounted, ref } from 'vue'
+import { RouterView } from 'vue-router'
+import SolarStarBold from '~icons/solar/star-bold'
 
 const stars = generateUniformPositions(10, {
   minGridSize: 10,
